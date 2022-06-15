@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saiful - Chatbot </title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('/botcss/style.css') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="title">Chatbot Test</div>
+        <div class="form">
+            <div class="bot-inbox inbox">
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="msg-header">
+                    <p>Hello there, how can I help you?</p>
+                </div>
+            </div>
+        </div>
+        <div class="typing-field">
+            <div class="input-data">
+                <input id="data" type="text" placeholder="Type something here.." required>
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#send-btn").on("click", function(){
+                  responseData();
+            
+        });
+        });
+    </script>
+    <script>
+        $('#data').keypress(function(event){
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if(keycode == '13'){
+    responseData();
+  }
+ 
+});
+    </script>
+
+    <script>
+        function responseData(){
+  let  values = $("#data").val();
+                $msg = '<div class="user-inbox inbox"><div class="msg-header"><p>'+ values +'</p></div></div>';
+                $(".form").append($msg);
+                $("#data").val('');
+            
+                $.ajax({
+                    url: 'getReplyForQuestion',
+                    method: 'GET',
+                    data: {text:values},
+                    success: function(result){
+                        $replay = '<div class="bot-inbox inbox"><div class="icon"><i class="fas fa-user"></i></div><div class="msg-header"><p>'+ result +'</p></div></div>';
+                        $(".form").append($replay);
+                        // when chat goes down the scroll bar automatically comes to the bottom
+                        $(".form").scrollTop($(".form")[0].scrollHeight);
+                    }
+                });
+  
+        }
+    </script>
+</body>
+</html>
